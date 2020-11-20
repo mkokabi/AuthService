@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{1407D212-9A3A-4810-91CF-14C5F92F35BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{1407D212-9A3A-4810-91CF-14C5F92F35BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{0152CD8C-B5F0-4571-94A8-9EBF12F7471B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{0152CD8C-B5F0-4571-94A8-9EBF12F7471B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService.csproj", "{6442C76A-9305-4E97-98E6-DB7CBFAB62DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService.csproj", "{6442C76A-9305-4E97-98E6-DB7CBFAB62DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceBase", "UserServiceBase\UserServiceBase.csproj", "{DCC2EBA5-B656-45B8-B13A-E78CE62FB5A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserServiceBase", "UserServiceBase\UserServiceBase.csproj", "{DCC2EBA5-B656-45B8-B13A-E78CE62FB5A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService", "WebService\WebService.csproj", "{A96795AE-5BF9-4812-97CC-340C79DC1E0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DCC2EBA5-B656-45B8-B13A-E78CE62FB5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCC2EBA5-B656-45B8-B13A-E78CE62FB5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCC2EBA5-B656-45B8-B13A-E78CE62FB5A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A96795AE-5BF9-4812-97CC-340C79DC1E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A96795AE-5BF9-4812-97CC-340C79DC1E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A96795AE-5BF9-4812-97CC-340C79DC1E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A96795AE-5BF9-4812-97CC-340C79DC1E0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "--action=login --username=user1 --password=pwd1"
+      "commandLineArgs": "--action=login --using=webservice --username=user1 --password=pwd1"
     }
   }
 }

@@ -7,6 +7,7 @@ namespace ConsoleApp
 {
     interface ILoginService
     {
-        Task<string> Login(string username, string pasword);
+        Task<string> LoginUsingWebApi(string username, string pasword);
+        Task<string> LoginUsingWebService(string username, string pasword);
     }
 }

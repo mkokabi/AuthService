@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ConsoleApp
@@ -38,30 +39,39 @@ namespace ConsoleApp
             private readonly ILoginService loginService;
             private readonly IConfiguration configuration;
 
+            private readonly Dictionary<string, Func<Task<string>>> RunActions = new Dictionary<string, Func<Task<string>>>(StringComparer.InvariantCultureIgnoreCase);
+
             public ConsoleApp(ILoginService loginService, IConfiguration configuration)
             {
                 this.loginService = loginService;
                 this.configuration = configuration;
+                RunActions.Add("login", Login);
             }
 
             public async Task Run()
             {
-                if (configuration.GetValue<string>("action") == null)
+                var actionArg = configuration.GetValue<string>("action");
+                if (actionArg == null)
                 {
                     Console.WriteLine("No action provided.");
                     ShowHelp();
                     return;
                 }
-                if (configuration.GetValue<string>("action").Equals("login", StringComparison.InvariantCultureIgnoreCase))
+
+                if (!RunActions.TryGetValue(actionArg, out var action))
                 {
-                    Console.WriteLine(await Login());
+                    Console.WriteLine("Invalid action.");
+                    ShowHelp();
+                    return;
                 }
+
+                Console.WriteLine(await action());
             }
 
             private void ShowHelp()
             {
                 Console.WriteLine("Usage: ");
-                Console.WriteLine(@"--Action=Login --Username={string} --Password={string");
+                Console.WriteLine(@"--Action=Login --Using={WebService|WebAPI} --Username={string} --Password={string");
             }
 
             private async Task<string> Login()
@@ -69,7 +79,15 @@ namespace ConsoleApp
                 var username = configuration.GetValue<string>("username");
                 var password = configuration.GetValue<string>("password");
 
-                return await loginService.Login(username, password);
+                if (configuration.GetValue<string>("using").Equals("WebService", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return await loginService.LoginUsingWebService(username, password);
+                }
+                else if (configuration.GetValue<string>("using").Equals("WebAPI", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return await loginService.LoginUsingWebApi(username, password);
+                }
+                return @"Invalid ""using"" arg";
             }
         }
     }
