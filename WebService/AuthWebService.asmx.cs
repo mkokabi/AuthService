@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.Services;
-using UserService;
 
 namespace WebService
 {
@@ -21,8 +19,17 @@ namespace WebService
         [WebMethod]
         public string Login(string username, string password)
         {
-            var result = new AuthService().Login(username, password).Result;
-            return $"Login from Web Service {result.Message}";
+            string connStr = ConfigurationManager.ConnectionStrings["usersdbConnectionString"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "Select count(0) from Users where UserName = @username and Password = @password";
+                cmd.Parameters.AddWithValue("username", username);
+                cmd.Parameters.AddWithValue("password", password);
+                conn.Open();
+                var count = Convert.ToInt32(cmd.ExecuteScalar());
+                return count > 0 ? "Login from Web Service, succesful" : "Login from Web Service failed";
+            }
         }
     }
 }

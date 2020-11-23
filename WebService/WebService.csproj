@@ -95,10 +95,6 @@
       <Project>{dcc2eba5-b656-45b8-b13a-e78ce62fb5a1}</Project>
       <Name>UserServiceBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UserService\UserService.csproj">
-      <Project>{6442c76a-9305-4e97-98e6-db7cbfab62da}</Project>
-      <Name>UserService</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
