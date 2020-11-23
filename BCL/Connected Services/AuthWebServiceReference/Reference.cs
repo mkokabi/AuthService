@@ -23,6 +23,15 @@ namespace BCL.AuthWebServiceReference {
         System.IAsyncResult BeginLogin(BCL.AuthWebServiceReference.LoginRequest request, System.AsyncCallback callback, object asyncState);
         
         BCL.AuthWebServiceReference.LoginResponse EndLogin(System.IAsyncResult result);
+        
+        // CODEGEN: Generating message contract since element name username from namespace http://tempuri.org/ is not marked nillable
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/CreateUser", ReplyAction="*")]
+        BCL.AuthWebServiceReference.CreateUserResponse CreateUser(BCL.AuthWebServiceReference.CreateUserRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(AsyncPattern=true, Action="http://tempuri.org/CreateUser", ReplyAction="*")]
+        System.IAsyncResult BeginCreateUser(BCL.AuthWebServiceReference.CreateUserRequest request, System.AsyncCallback callback, object asyncState);
+        
+        BCL.AuthWebServiceReference.CreateUserResponse EndCreateUser(System.IAsyncResult result);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -97,6 +106,78 @@ namespace BCL.AuthWebServiceReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class CreateUserRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="CreateUser", Namespace="http://tempuri.org/", Order=0)]
+        public BCL.AuthWebServiceReference.CreateUserRequestBody Body;
+        
+        public CreateUserRequest() {
+        }
+        
+        public CreateUserRequest(BCL.AuthWebServiceReference.CreateUserRequestBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class CreateUserRequestBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public string username;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public string password;
+        
+        public CreateUserRequestBody() {
+        }
+        
+        public CreateUserRequestBody(string username, string password) {
+            this.username = username;
+            this.password = password;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class CreateUserResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="CreateUserResponse", Namespace="http://tempuri.org/", Order=0)]
+        public BCL.AuthWebServiceReference.CreateUserResponseBody Body;
+        
+        public CreateUserResponse() {
+        }
+        
+        public CreateUserResponse(BCL.AuthWebServiceReference.CreateUserResponseBody Body) {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://tempuri.org/")]
+    public partial class CreateUserResponseBody {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=0)]
+        public int CreateUserResult;
+        
+        public CreateUserResponseBody() {
+        }
+        
+        public CreateUserResponseBody(int CreateUserResult) {
+            this.CreateUserResult = CreateUserResult;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface AuthWebServiceSoapChannel : BCL.AuthWebServiceReference.AuthWebServiceSoap, System.ServiceModel.IClientChannel {
     }
@@ -122,6 +203,25 @@ namespace BCL.AuthWebServiceReference {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    public partial class CreateUserCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        public CreateUserCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        public int Result {
+            get {
+                base.RaiseExceptionIfNecessary();
+                return ((int)(this.results[0]));
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public partial class AuthWebServiceSoapClient : System.ServiceModel.ClientBase<BCL.AuthWebServiceReference.AuthWebServiceSoap>, BCL.AuthWebServiceReference.AuthWebServiceSoap {
         
         private BeginOperationDelegate onBeginLoginDelegate;
@@ -129,6 +229,12 @@ namespace BCL.AuthWebServiceReference {
         private EndOperationDelegate onEndLoginDelegate;
         
         private System.Threading.SendOrPostCallback onLoginCompletedDelegate;
+        
+        private BeginOperationDelegate onBeginCreateUserDelegate;
+        
+        private EndOperationDelegate onEndCreateUserDelegate;
+        
+        private System.Threading.SendOrPostCallback onCreateUserCompletedDelegate;
         
         public AuthWebServiceSoapClient() {
         }
@@ -150,6 +256,8 @@ namespace BCL.AuthWebServiceReference {
         }
         
         public event System.EventHandler<LoginCompletedEventArgs> LoginCompleted;
+        
+        public event System.EventHandler<CreateUserCompletedEventArgs> CreateUserCompleted;
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         BCL.AuthWebServiceReference.LoginResponse BCL.AuthWebServiceReference.AuthWebServiceSoap.Login(BCL.AuthWebServiceReference.LoginRequest request) {
@@ -226,6 +334,83 @@ namespace BCL.AuthWebServiceReference {
             base.InvokeAsync(this.onBeginLoginDelegate, new object[] {
                         username,
                         password}, this.onEndLoginDelegate, this.onLoginCompletedDelegate, userState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        BCL.AuthWebServiceReference.CreateUserResponse BCL.AuthWebServiceReference.AuthWebServiceSoap.CreateUser(BCL.AuthWebServiceReference.CreateUserRequest request) {
+            return base.Channel.CreateUser(request);
+        }
+        
+        public int CreateUser(string username, string password) {
+            BCL.AuthWebServiceReference.CreateUserRequest inValue = new BCL.AuthWebServiceReference.CreateUserRequest();
+            inValue.Body = new BCL.AuthWebServiceReference.CreateUserRequestBody();
+            inValue.Body.username = username;
+            inValue.Body.password = password;
+            BCL.AuthWebServiceReference.CreateUserResponse retVal = ((BCL.AuthWebServiceReference.AuthWebServiceSoap)(this)).CreateUser(inValue);
+            return retVal.Body.CreateUserResult;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.IAsyncResult BCL.AuthWebServiceReference.AuthWebServiceSoap.BeginCreateUser(BCL.AuthWebServiceReference.CreateUserRequest request, System.AsyncCallback callback, object asyncState) {
+            return base.Channel.BeginCreateUser(request, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public System.IAsyncResult BeginCreateUser(string username, string password, System.AsyncCallback callback, object asyncState) {
+            BCL.AuthWebServiceReference.CreateUserRequest inValue = new BCL.AuthWebServiceReference.CreateUserRequest();
+            inValue.Body = new BCL.AuthWebServiceReference.CreateUserRequestBody();
+            inValue.Body.username = username;
+            inValue.Body.password = password;
+            return ((BCL.AuthWebServiceReference.AuthWebServiceSoap)(this)).BeginCreateUser(inValue, callback, asyncState);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        BCL.AuthWebServiceReference.CreateUserResponse BCL.AuthWebServiceReference.AuthWebServiceSoap.EndCreateUser(System.IAsyncResult result) {
+            return base.Channel.EndCreateUser(result);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        public int EndCreateUser(System.IAsyncResult result) {
+            BCL.AuthWebServiceReference.CreateUserResponse retVal = ((BCL.AuthWebServiceReference.AuthWebServiceSoap)(this)).EndCreateUser(result);
+            return retVal.Body.CreateUserResult;
+        }
+        
+        private System.IAsyncResult OnBeginCreateUser(object[] inValues, System.AsyncCallback callback, object asyncState) {
+            string username = ((string)(inValues[0]));
+            string password = ((string)(inValues[1]));
+            return this.BeginCreateUser(username, password, callback, asyncState);
+        }
+        
+        private object[] OnEndCreateUser(System.IAsyncResult result) {
+            int retVal = this.EndCreateUser(result);
+            return new object[] {
+                    retVal};
+        }
+        
+        private void OnCreateUserCompleted(object state) {
+            if ((this.CreateUserCompleted != null)) {
+                InvokeAsyncCompletedEventArgs e = ((InvokeAsyncCompletedEventArgs)(state));
+                this.CreateUserCompleted(this, new CreateUserCompletedEventArgs(e.Results, e.Error, e.Cancelled, e.UserState));
+            }
+        }
+        
+        public void CreateUserAsync(string username, string password) {
+            this.CreateUserAsync(username, password, null);
+        }
+        
+        public void CreateUserAsync(string username, string password, object userState) {
+            if ((this.onBeginCreateUserDelegate == null)) {
+                this.onBeginCreateUserDelegate = new BeginOperationDelegate(this.OnBeginCreateUser);
+            }
+            if ((this.onEndCreateUserDelegate == null)) {
+                this.onEndCreateUserDelegate = new EndOperationDelegate(this.OnEndCreateUser);
+            }
+            if ((this.onCreateUserCompletedDelegate == null)) {
+                this.onCreateUserCompletedDelegate = new System.Threading.SendOrPostCallback(this.OnCreateUserCompleted);
+            }
+            base.InvokeAsync(this.onBeginCreateUserDelegate, new object[] {
+                        username,
+                        password}, this.onEndCreateUserDelegate, this.onCreateUserCompletedDelegate, userState);
         }
     }
 }

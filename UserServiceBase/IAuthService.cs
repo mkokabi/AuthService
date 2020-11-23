@@ -8,6 +8,8 @@ namespace UserServiceBase
     public interface IAuthService
     {
         Task<AuthResult> Login(string username, string password);
+
+        Task<int> CreateUser(string username, string password);
     }
 
     public class AuthResult

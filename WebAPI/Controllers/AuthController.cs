@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using UserServiceBase;
 
@@ -19,10 +16,33 @@ namespace WebAPI.Controllers
             this.authService = authService;
         }
 
-        [HttpGet("Login")]
-        public async Task<AuthResult> Login([FromQuery]string username, [FromQuery]string password)
+        public class UserCredentials
         {
-            return await authService.Login(username, password);
+            [JsonPropertyName("username")]
+            public string Username { get; set; }
+            [JsonPropertyName("password")]
+            public string Password { get; set; }
+        }
+
+
+        [HttpPost("Login")]
+        public async Task<AuthResult> Login([FromBody]UserCredentials userCredentials)
+        {
+            return await authService.Login(userCredentials.Username, userCredentials.Password);
+        }
+
+        public class UserDetails
+        {
+            [JsonPropertyName("username")]
+            public string Username { get; set; }
+            [JsonPropertyName("password")]
+            public string Password { get; set; }
+        }
+
+        [HttpPost("CreateUser")]
+        public async Task<int> CreateUser([FromBody]UserDetails userDetails)
+        {
+            return await authService.CreateUser(userDetails.Username, userDetails.Password);
         }
     }
 }

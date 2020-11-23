@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 using System;
+using static BCL.AuthWebServiceBCL;
 using ServiceCollection = Microsoft.Extensions.DependencyInjection.ServiceCollection;
 
 namespace BCL

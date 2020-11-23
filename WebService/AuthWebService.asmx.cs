@@ -31,5 +31,21 @@ namespace WebService
                 return count > 0 ? "Login from Web Service, succesful" : "Login from Web Service failed";
             }
         }
+
+        [WebMethod]
+        public int CreateUser(string username, string password)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["usersdbConnectionString"].ConnectionString;
+            using (var conn = new SqlConnection(connStr))
+            {
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "Insert into Users(UserName, Password) values (@username, @password); Select SCOPE_IDENTITY()";
+                cmd.Parameters.AddWithValue("username", username);
+                cmd.Parameters.AddWithValue("password", password);
+                conn.Open();
+                var newId = Convert.ToInt32(cmd.ExecuteScalar());
+                return newId;
+            }
+        }
     }
 }

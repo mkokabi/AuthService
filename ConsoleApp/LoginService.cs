@@ -17,10 +17,18 @@ namespace ConsoleApp
             this.options = options;
         }
 
-        public async Task<string> LoginUsingWebApi(string username, string pasword)
+        public async Task<string> LoginUsingWebApi(string username, string password)
         {
+            var wapiUrl = options.Value.AuthApiURL;
             var httpClient = this.clientFactory.CreateClient();
-            var httpResponse = await httpClient.GetAsync($"{options.Value.AuthApiURL}/Login?username={username}&password={pasword}");
+            var requestBody = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                username = username,
+                password = password
+            });
+            var stringContent = new StringContent(requestBody, encoding: System.Text.Encoding.UTF8, mediaType: "application/json");
+            var httpResponse = httpClient.PostAsync($"{wapiUrl}/Login", stringContent).Result;
+
             var response = await httpResponse.Content.ReadAsStringAsync();
             return $"API response: {response}";
         }

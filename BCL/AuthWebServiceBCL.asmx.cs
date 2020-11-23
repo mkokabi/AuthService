@@ -1,5 +1,4 @@
 ﻿using BCL.AuthWebServiceReference;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
@@ -25,37 +24,77 @@ namespace BCL
             var scope = Global._serviceProvider.CreateScope();
             return scope.ServiceProvider.GetRequiredService<BCLApp>().Login(username, password);
         }
-    }
 
-    public class BCLApp
-    {
-        private readonly IOptions<BCLAppConfig> options;
-        private readonly IFeatureManager featureManager;
-
-        public BCLApp(IOptions<BCLAppConfig> options, IFeatureManager featureManager)
+        [WebMethod]
+        public int CreateUser(string username, string password)
         {
-            this.options = options;
-            this.featureManager = featureManager;
+            var scope = Global._serviceProvider.CreateScope();
+            return scope.ServiceProvider.GetRequiredService<BCLApp>().CreateUser(username, password);
         }
 
-        public string Login(string username, string password)
+        public class BCLApp
         {
-            var callWebService = featureManager.IsEnabledAsync("CallWebService").Result;
-            if (callWebService)
+            private readonly IOptions<BCLAppConfig> options;
+            private readonly IFeatureManager featureManager;
+
+            public BCLApp(IOptions<BCLAppConfig> options, IFeatureManager featureManager)
             {
-                var wsUrl = options.Value.AuthWebServiceURL;
-                var webServiceClient = new AuthWebServiceSoapClient();
-                webServiceClient.Endpoint.Address = new EndpointAddress(wsUrl);
-                var response = webServiceClient.Login(username, password);
-                return $"WebService response from BCL : {response}";
+                this.options = options;
+                this.featureManager = featureManager;
             }
-            else
+
+            public string Login(string username, string password)
             {
-                var wapiUrl = options.Value.AuthApiURL;
-                var httpClient = new HttpClient();
-                var httpResponse = httpClient.GetAsync($"{wapiUrl}/Login?username={username}&password={password}").Result;
-                var response = httpResponse.Content.ReadAsStringAsync().Result;
-                return $"WebAPI response from BCL : {response}";
+                var callWebService = featureManager.IsEnabledAsync("CallWebServiceForLogin").Result;
+                if (callWebService)
+                {
+                    var wsUrl = options.Value.AuthWebServiceURL;
+                    var webServiceClient = new AuthWebServiceSoapClient();
+                    webServiceClient.Endpoint.Address = new EndpointAddress(wsUrl);
+                    var response = webServiceClient.Login(username, password);
+                    return $"WebService response from BCL : {response}";
+                }
+                else
+                {
+                    var wapiUrl = options.Value.AuthApiURL;
+                    var httpClient = new HttpClient();
+                    var requestBody = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        username = username,
+                        password = password
+                    });
+                    var stringContent = new StringContent(requestBody, encoding: System.Text.Encoding.UTF8, mediaType: "application/json");
+                    var httpResponse = httpClient.PostAsync($"{wapiUrl}/Login", stringContent).Result;
+                    var response = httpResponse.Content.ReadAsStringAsync().Result;
+                    return $"WebAPI response from BCL : {response}";
+                }
+            }
+
+            public int CreateUser(string username, string password)
+            {
+                var callWebService = featureManager.IsEnabledAsync("CallWebServiceForCreate").Result;
+                if (callWebService)
+                {
+                    var wsUrl = options.Value.AuthWebServiceURL;
+                    var webServiceClient = new AuthWebServiceSoapClient();
+                    webServiceClient.Endpoint.Address = new EndpointAddress(wsUrl);
+                    var response = webServiceClient.CreateUser(username, password);
+                    return response;
+                }
+                else
+                {
+                    var wapiUrl = options.Value.AuthApiURL;
+                    var httpClient = new HttpClient();
+                    var requestBody = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        username = username,
+                        password = password
+                    });
+                    var stringContent = new StringContent(requestBody, encoding: System.Text.Encoding.UTF8, mediaType: "application/json");
+                    var httpResponse = httpClient.PostAsync($"{wapiUrl}/CreateUser", stringContent).Result;
+                    var result = (int)httpResponse.StatusCode;
+                    return result;
+                }
             }
         }
     }
