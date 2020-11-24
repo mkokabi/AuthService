@@ -10,6 +10,17 @@ aws dynamodb create-table --table-name Users `
   --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
 ```
 
+```shell
+aws dynamodb create-table --table-name Users \
+ --attribute-definitions \
+  AttributeName=UserName,AttributeType=S \
+  AttributeName=CreatedDate,AttributeType=S \
+  --key-schema \
+  AttributeName=UserName,KeyType=HASH \
+  AttributeName=CreatedDate,KeyType=RANGE \
+  --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+```
+
 # Delete table
  aws  dynamodb delete-table --table-name Users
 
@@ -22,6 +33,11 @@ aws dynamodb put-item \
 "UserID": {"N": "1" },
 "Password" : {"S": "123" }
 }'
+```
+
+# Scan
+```shell
+aws dynamodb scan --table-name Users
 ```
 
 # Query

@@ -49,17 +49,19 @@ namespace UserServiceDynamoRepository
             {
                 Username = firstUser["UserName"].S,
                 Password = firstUser["Password"].S,
+                SecondayPassword = firstUser.ContainsKey("SecondayPassword") ? firstUser["SecondayPassword"].S : null,
             };
         }
 
         public async Task<User[]> QueryUsers()
         {
             var scanResponse = await Client.ScanAsync("Users", new List<string> {
-                "UserName", "Password"});
+                "UserName", "Password", "SecondayPassword"});
             return scanResponse.Items.Select(u => new User
             {
                 Username = u["UserName"].S,
                 Password = u["Password"].S,
+                SecondayPassword = u["SecondayPassword"].S,
             }).ToArray();
         }
 
@@ -75,6 +77,10 @@ namespace UserServiceDynamoRepository
             if (user.UserId.HasValue)
             {
                 userAttrs.Add("UserID", new AttributeValue { N = user.UserId.ToString() });
+            }
+            if (!string.IsNullOrWhiteSpace(user.SecondayPassword))
+            {
+                userAttrs.Add("SecondayPassword", new AttributeValue(user.SecondayPassword));
             }
             var response = await Client.PutItemAsync("Users", userAttrs);
             var statusCode = response.HttpStatusCode;

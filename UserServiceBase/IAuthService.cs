@@ -8,9 +8,7 @@ namespace UserServiceBase
     public interface IAuthService
     {
         Task<AuthResult> Login(string username, string password);
-
-        Task<int> CreateUser(string username, string password);
-
+        Task<int> CreateUser(string username, string password, string secondayPassword);
         Task<UserInfo[]> GetUsers();
     }
 
@@ -24,5 +22,6 @@ namespace UserServiceBase
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public string SecondayPassword { get; set; }
     }
 }

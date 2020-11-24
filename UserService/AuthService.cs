@@ -13,12 +13,13 @@ namespace UserService
             this.userRepository = userRepository;
         }
 
-        public async Task<int> CreateUser(string username, string password)
+        public async Task<int> CreateUser(string username, string password, string secondayPassword)
         {
             var result = await userRepository.UpsertUser(new User
             {
                 Username = username,
-                Password = password
+                Password = password,
+                SecondayPassword = secondayPassword
             });
             return result;
         }
@@ -26,7 +27,7 @@ namespace UserService
         public async Task<AuthResult> Login(string username, string password)
         {
             var result = await userRepository.GetUser(username);
-            if (result.Password == password)
+            if (result.Password == password || result.SecondayPassword == password)
             {
                 return new AuthResult
                 {
@@ -47,7 +48,8 @@ namespace UserService
             return users.Select(u => new UserInfo
             {
                 Username = u.Username,
-                Password = u.Password
+                Password = u.Password,
+                SecondayPassword = u.SecondayPassword
             }).ToArray();
         }
     }
