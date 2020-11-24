@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Linq;
 using UserServiceBase;
 
 namespace WebAPI.Controllers
@@ -43,6 +44,13 @@ namespace WebAPI.Controllers
         public async Task<int> CreateUser([FromBody]UserDetails userDetails)
         {
             return await authService.CreateUser(userDetails.Username, userDetails.Password);
+        }
+
+        [HttpGet("GetUsers")]
+        public async Task<UserDetails[]> Get()
+        {
+            var userInfos = await authService.GetUsers();
+            return userInfos.Select(u => new UserDetails { Username = u.Username, Password = u.Password }).ToArray();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Linq;
 using UserServiceBase;
 
 namespace UserService
@@ -38,6 +39,16 @@ namespace UserService
                 Success = false,
                 Message = "Login failed"
             };
+        }
+
+        public async Task<UserInfo[]> GetUsers()
+        {
+            var users = await userRepository.QueryUsers();
+            return users.Select(u => new UserInfo
+            {
+                Username = u.Username,
+                Password = u.Password
+            }).ToArray();
         }
     }
 }

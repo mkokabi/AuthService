@@ -6,6 +6,7 @@ namespace UserServiceBase
     {
         Task<int> UpsertUser(User user);
         Task<User> GetUser(string username);
+        Task<User[]> QueryUsers();
     }
 
     public class User

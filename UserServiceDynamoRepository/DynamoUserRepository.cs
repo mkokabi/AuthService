@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Amazon.DynamoDBv2.Model;
 using UserServiceBase;
 using Amazon.DynamoDBv2;
@@ -49,6 +50,17 @@ namespace UserServiceDynamoRepository
                 Username = firstUser["UserName"].S,
                 Password = firstUser["Password"].S,
             };
+        }
+
+        public async Task<User[]> QueryUsers()
+        {
+            var scanResponse = await Client.ScanAsync("Users", new List<string> {
+                "UserName", "Password"});
+            return scanResponse.Items.Select(u => new User
+            {
+                Username = u["UserName"].S,
+                Password = u["Password"].S,
+            }).ToArray();
         }
 
         public async Task<int> UpsertUser(User user)
