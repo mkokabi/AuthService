@@ -5,18 +5,39 @@ namespace UserService
 {
     public class AuthService : IAuthService
     {
-        public Task<int> CreateUser(string username, string password)
+        private readonly IUserRepository userRepository;
+
+        public AuthService(IUserRepository userRepository)
         {
-            return Task.FromResult(1);
+            this.userRepository = userRepository;
         }
 
-        public Task<AuthResult> Login(string username, string password)
+        public async Task<int> CreateUser(string username, string password)
         {
-            return Task.FromResult(new AuthResult
+            var result = await userRepository.UpsertUser(new User
             {
-                Success = true,
-                Message = "Login was sucessful"
+                Username = username,
+                Password = password
             });
+            return result;
+        }
+
+        public async Task<AuthResult> Login(string username, string password)
+        {
+            var result = await userRepository.GetUser(username);
+            if (result.Password == password)
+            {
+                return new AuthResult
+                {
+                    Success = true,
+                    Message = "Login was sucessful"
+                };
+            }
+            return new AuthResult
+            {
+                Success = false,
+                Message = "Login failed"
+            };
         }
     }
 }

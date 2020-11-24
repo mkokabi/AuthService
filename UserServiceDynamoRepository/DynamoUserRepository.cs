@@ -10,7 +10,6 @@ namespace UserServiceDynamoRepository
 {
     public class DynamoUserRepository : IUserRepository
     {
-        // private static readonly string EndpointUrl = "http://localhost:8000";
         private AmazonDynamoDBClient Client;
 
         public DynamoUserRepository(IConfiguration configuration)
@@ -34,23 +33,44 @@ namespace UserServiceDynamoRepository
             return (long)timeSpan.TotalSeconds;
         }
 
+        public async Task<User> GetUser(string username)
+        {
+            var query = new QueryRequest("Users");
+            query.KeyConditionExpression = "UserName = :un";
+            var userAttrs = new Dictionary<string, AttributeValue>
+            {
+                { ":un", new AttributeValue(username) },
+            };
+            query.ExpressionAttributeValues = userAttrs;
+            var queryResult = await Client.QueryAsync(query);
+            var firstUser = queryResult.Items[0];
+            return new User
+            {
+                Username = firstUser["UserName"].S,
+                Password = firstUser["Password"].S,
+            };
+        }
+
         public async Task<int> UpsertUser(User user)
         {
             var userAttrs = new Dictionary<string, AttributeValue>
             {
                 { "UserName", new AttributeValue(user.Username) },
-                { "UserID", new AttributeValue { N = user.UserId.ToString() } },
                 { "Password", new AttributeValue(user.Password.ToString()) },
                 // { "CreatedDate", new AttributeValue { N = DateTimeToUnix(DateTime.Now).ToString()} }
                 { "CreatedDate", new AttributeValue(DateTime.Now.ToString("u")) }
             };
+            if (user.UserId.HasValue)
+            {
+                userAttrs.Add("UserID", new AttributeValue { N = user.UserId.ToString() });
+            }
             var response = await Client.PutItemAsync("Users", userAttrs);
             var statusCode = response.HttpStatusCode;
             if (statusCode != System.Net.HttpStatusCode.OK)
             {
                 throw new ApplicationException($"Failed with status code {statusCode}");
             }
-            return user.UserId;
+            return (int)statusCode;
         }
     }
 }

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UserServiceBase\UserServiceBase.csproj" />
+    <ProjectReference Include="..\UserServiceDynamoRepository\UserServiceDynamoRepository.csproj" />
     <ProjectReference Include="..\UserService\UserService.csproj" />
   </ItemGroup>
 
