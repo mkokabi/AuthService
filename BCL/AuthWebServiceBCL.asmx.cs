@@ -45,8 +45,8 @@ namespace BCL
 
             public string Login(string username, string password)
             {
-                var callWebService = featureManager.IsEnabledAsync("CallWebServiceForLogin").Result;
-                if (callWebService)
+                var callApiForLogin = featureManager.IsEnabledAsync("CallAPIForLogin").Result;
+                if (!callApiForLogin)
                 {
                     var wsUrl = options.Value.AuthWebServiceURL;
                     var webServiceClient = new AuthWebServiceSoapClient();
@@ -72,14 +72,10 @@ namespace BCL
 
             public int CreateUser(string username, string password)
             {
-                var callWebService = featureManager.IsEnabledAsync("CallWebServiceForCreate").Result;
-                if (callWebService)
+                var callApiForCreate = featureManager.IsEnabledAsync("CallAPIForCreate").Result;
+                if (!callApiForCreate)
                 {
-                    var wsUrl = options.Value.AuthWebServiceURL;
-                    var webServiceClient = new AuthWebServiceSoapClient();
-                    webServiceClient.Endpoint.Address = new EndpointAddress(wsUrl);
-                    var response = webServiceClient.CreateUser(username, password);
-                    return response;
+                    return CallWebServiceForCreateUser(username, password);
                 }
                 else
                 {
@@ -93,8 +89,24 @@ namespace BCL
                     var stringContent = new StringContent(requestBody, encoding: System.Text.Encoding.UTF8, mediaType: "application/json");
                     var httpResponse = httpClient.PostAsync($"{wapiUrl}/CreateUser", stringContent).Result;
                     var result = (int)httpResponse.StatusCode;
+
+                    var callWSForCreate = featureManager.IsEnabledAsync("ForBackwardCompatibiltyCallWebServiceForCreate").Result;
+                    if (callWSForCreate)
+                    {
+                        CallWebServiceForCreateUser(username, password);
+                    }
+
                     return result;
                 }
+            }
+
+            private int CallWebServiceForCreateUser(string username, string password)
+            {
+                var wsUrl = options.Value.AuthWebServiceURL;
+                var webServiceClient = new AuthWebServiceSoapClient();
+                webServiceClient.Endpoint.Address = new EndpointAddress(wsUrl);
+                var response = webServiceClient.CreateUser(username, password);
+                return response;
             }
         }
     }
