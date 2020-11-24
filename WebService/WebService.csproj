@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="AuthWebService.asmx" />
     <Content Include="Global.asax" />
+    <Content Include="UserWebForm.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -80,6 +81,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserWebForm.aspx.cs">
+      <DependentUpon>UserWebForm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserWebForm.aspx.designer.cs">
+      <DependentUpon>UserWebForm.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -2,7 +2,7 @@
   "profiles": {
     "ConsoleApp": {
       "commandName": "Project",
-      "commandLineArgs": "--action=migrate --fromID=0 --using=webservice --username=user1 --password=pwd1"
+      "commandLineArgs": "--action=migrate --fromID=1002 --using=webservice --username=user1 --password=pwd1"
     }
   }
 }
