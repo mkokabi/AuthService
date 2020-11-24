@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using UserServiceBase;
+using UserServiceDynamoRepository;
 
 namespace ConsoleApp
 {
@@ -30,6 +33,7 @@ namespace ConsoleApp
                 .Bind(configuration.GetSection("ConsoleAppConfig"));
             services.AddHttpClient();
             services.AddSingleton<ILoginService, LoginService>();
+            services.AddSingleton<IUserRepository, DynamoUserRepository>();
             services.AddSingleton<ConsoleApp>();
             _serviceProvider = services.BuildServiceProvider(true);
         }
@@ -38,14 +42,16 @@ namespace ConsoleApp
         {
             private readonly ILoginService loginService;
             private readonly IConfiguration configuration;
-
+            private readonly IUserRepository userRepository;
             private readonly Dictionary<string, Func<Task<string>>> RunActions = new Dictionary<string, Func<Task<string>>>(StringComparer.InvariantCultureIgnoreCase);
 
-            public ConsoleApp(ILoginService loginService, IConfiguration configuration)
+            public ConsoleApp(ILoginService loginService, IConfiguration configuration, IUserRepository userRepository)
             {
                 this.loginService = loginService;
                 this.configuration = configuration;
+                this.userRepository = userRepository;
                 RunActions.Add("login", Login);
+                RunActions.Add("migrate", Migrate);
             }
 
             public async Task Run()
@@ -72,6 +78,7 @@ namespace ConsoleApp
             {
                 Console.WriteLine("Usage: ");
                 Console.WriteLine(@"--Action=Login --Using={WebService|WebAPI} --Username={string} --Password={string");
+                Console.WriteLine(@"--Action=Migrate --FromID={number}");
             }
 
             private async Task<string> Login()
@@ -88,6 +95,37 @@ namespace ConsoleApp
                     return await loginService.LoginUsingWebApi(username, password);
                 }
                 return @"Invalid ""using"" arg";
+            }
+
+            private async Task<string> Migrate()
+            {
+                var fromId = configuration.GetValue<string>("fromid");
+                string connStr = configuration.GetConnectionString("usersdbConnectionString");
+                using (var conn = new SqlConnection(connStr))
+                {
+                    var commandText = "Select UserID, UserName, Password from Users where userId > @fromUserId";
+                    conn.Open();
+                    using (var cmd = new SqlCommand(commandText, conn))
+                    {
+                        cmd.Parameters.AddWithValue("fromUserId", fromId);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var user = new User
+                                {
+                                    UserId = reader.GetInt32(0),
+                                    Username = reader.GetString(1),
+                                    Password = reader.GetString(2)
+                                };
+
+                                await userRepository.UpsertUser(user);
+                            }
+                        }
+                    }
+                }
+
+                return await Task.FromResult<string>("1");
             }
         }
     }
