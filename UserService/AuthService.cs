@@ -27,6 +27,14 @@ namespace UserService
         public async Task<AuthResult> Login(string username, string password)
         {
             var result = await userRepository.GetUser(username);
+            if (result == null)
+            {
+                return new AuthResult
+                {
+                    Success = false,
+                    Message = "User can not be found"
+                };
+            }
             if (result.Password == password || result.SecondayPassword == password)
             {
                 return new AuthResult

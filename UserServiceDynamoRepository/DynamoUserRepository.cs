@@ -44,6 +44,10 @@ namespace UserServiceDynamoRepository
             };
             query.ExpressionAttributeValues = userAttrs;
             var queryResult = await Client.QueryAsync(query);
+            if (queryResult.Count == 0)
+            {
+                return null;
+            }
             var firstUser = queryResult.Items[0];
             return new User
             {
