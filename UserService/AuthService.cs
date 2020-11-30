@@ -13,13 +13,14 @@ namespace UserService
             this.userRepository = userRepository;
         }
 
-        public async Task<int> CreateUser(string username, string password, string secondayPassword)
+        public async Task<int> CreateUser(string username, string password, string secondayPassword, int? userId)
         {
             var result = await userRepository.UpsertUser(new User
             {
                 Username = username,
                 Password = password,
-                SecondayPassword = secondayPassword
+                SecondayPassword = secondayPassword, 
+                UserId = userId
             });
             return result;
         }

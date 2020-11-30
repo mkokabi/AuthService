@@ -40,12 +40,14 @@ namespace WebAPI.Controllers
             public string Password { get; set; }
             [JsonPropertyName("secondayPassword")]
             public string SecondayPassword { get; set; }
+            [JsonPropertyName("userId")]
+            public int? UserId { get; set; }
         }
 
         [HttpPost("CreateUser")]
         public async Task<int> CreateUser([FromBody]UserDetails userDetails)
         {
-            return await authService.CreateUser(userDetails.Username, userDetails.Password, userDetails.SecondayPassword);
+            return await authService.CreateUser(userDetails.Username, userDetails.Password, userDetails.SecondayPassword, userDetails.UserId);
         }
 
         [HttpGet("GetUsers")]

@@ -54,6 +54,7 @@ namespace UserServiceDynamoRepository
                 Username = firstUser["UserName"].S,
                 Password = firstUser["Password"].S,
                 SecondayPassword = firstUser.ContainsKey("SecondayPassword") ? firstUser["SecondayPassword"].S : null,
+                UserId = firstUser.ContainsKey("UserID") ? int.Parse(firstUser["UserID"].N) : (int?)null,
             };
         }
 
@@ -78,10 +79,20 @@ namespace UserServiceDynamoRepository
                 // { "CreatedDate", new AttributeValue { N = DateTimeToUnix(DateTime.Now).ToString()} }
                 { "CreatedDate", new AttributeValue(DateTime.Now.ToString("u")) }
             };
-            if (user.UserId.HasValue)
+            if (!user.UserId.HasValue)
             {
-                userAttrs.Add("UserID", new AttributeValue { N = user.UserId.ToString() });
+                var existingUserWithSameUserName = await GetUser(user.Username);
+                if (existingUserWithSameUserName == null)
+                {
+                    user.UserId = await IssueANewUserId();
+                }
+                else
+                {
+                    user.UserId = existingUserWithSameUserName.UserId;
+                }
             }
+            userAttrs.Add("UserID", new AttributeValue { N = user.UserId.ToString() });
+            
             if (!string.IsNullOrWhiteSpace(user.SecondayPassword))
             {
                 userAttrs.Add("SecondayPassword", new AttributeValue(user.SecondayPassword));
@@ -92,7 +103,31 @@ namespace UserServiceDynamoRepository
             {
                 throw new ApplicationException($"Failed with status code {statusCode}");
             }
-            return (int)statusCode;
+            return user.UserId.Value;
+        }
+
+        private async Task<int> IssueANewUserId()
+        {
+            string tableName = "UsersCatalog";
+
+            var request = new UpdateItemRequest
+            {
+                Key = new Dictionary<string, AttributeValue>() { { "Id", new AttributeValue { N = "0" } } },
+                ExpressionAttributeNames = new Dictionary<string, string>()
+                    {
+                        {"#id", "NewId"}
+                    },
+                ExpressionAttributeValues = new Dictionary<string, AttributeValue>()
+                    {
+                        {":incr",new AttributeValue {N = "1"}}
+                    },
+                UpdateExpression = "SET #id = #id + :incr",
+                ReturnValues = ReturnValue.ALL_NEW,
+                TableName = tableName
+            };
+
+            var response = await Client.UpdateItemAsync(request);
+            return int.Parse(response.Attributes["NewId"].N);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿# Creating table
+## Users
 ```powershell
 aws dynamodb create-table --table-name Users `
  --attribute-definitions `
   AttributeName=UserName,AttributeType=S `
-  AttributeName=CreatedDate,AttributeType=S `
   --key-schema `
   AttributeName=UserName,KeyType=HASH `
-  AttributeName=CreatedDate,KeyType=RANGE `
   --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
 ```
 
@@ -14,10 +13,18 @@ aws dynamodb create-table --table-name Users `
 aws dynamodb create-table --table-name Users \
  --attribute-definitions \
   AttributeName=UserName,AttributeType=S \
-  AttributeName=CreatedDate,AttributeType=S \
   --key-schema \
   AttributeName=UserName,KeyType=HASH \
-  AttributeName=CreatedDate,KeyType=RANGE \
+  --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
+```
+
+## UserCatalg
+```shell
+aws dynamodb create-table --table-name UsersCatalog \
+ --attribute-definitions \
+  AttributeName=Id,AttributeType=N \
+  --key-schema \
+  AttributeName=Id,KeyType=HASH \
   --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1
 ```
 
@@ -25,6 +32,7 @@ aws dynamodb create-table --table-name Users \
  aws  dynamodb delete-table --table-name Users
 
 # Insert
+## Users
 ```shell
 aws dynamodb put-item \
  --table-name Users \
@@ -32,6 +40,16 @@ aws dynamodb put-item \
 "UserName": {"S": "mkokabi"},
 "UserID": {"N": "1" },
 "Password" : {"S": "123" }
+}'
+```
+
+## UsersCatalog
+```shell
+aws dynamodb put-item \
+ --table-name UsersCatalog \
+--item '{
+"Id": {"N": "0"},
+"NewId": {"N": "0" }
 }'
 ```
 
