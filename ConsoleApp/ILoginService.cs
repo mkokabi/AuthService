@@ -9,5 +9,6 @@ namespace ConsoleApp
     {
         Task<string> LoginUsingWebApi(string username, string pasword);
         Task<string> LoginUsingWebService(string username, string pasword);
+        Task<string[]> GetUserNames();
     }
 }

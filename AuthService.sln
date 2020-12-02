@@ -18,7 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BCL", "BCL\BCL.csproj", "{9
 		{A96795AE-5BF9-4812-97CC-340C79DC1E0A} = {A96795AE-5BF9-4812-97CC-340C79DC1E0A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserServiceDynamoRepository", "UserServiceDynamoRepository\UserServiceDynamoRepository.csproj", "{EEC550C6-BD33-4251-BC6E-C2F1B2FFE36C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserServiceDynamoRepository", "UserServiceDynamoRepository\UserServiceDynamoRepository.csproj", "{EEC550C6-BD33-4251-BC6E-C2F1B2FFE36C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{C13FE218-5926-4F22-8A26-676D9D52E453}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +56,10 @@ Global
 		{EEC550C6-BD33-4251-BC6E-C2F1B2FFE36C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEC550C6-BD33-4251-BC6E-C2F1B2FFE36C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEC550C6-BD33-4251-BC6E-C2F1B2FFE36C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C13FE218-5926-4F22-8A26-676D9D52E453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C13FE218-5926-4F22-8A26-676D9D52E453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C13FE218-5926-4F22-8A26-676D9D52E453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C13FE218-5926-4F22-8A26-676D9D52E453}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -52,6 +52,7 @@ namespace ConsoleApp
                 this.userRepository = userRepository;
                 RunActions.Add("login", Login);
                 RunActions.Add("migrate", Migrate);
+                RunActions.Add("GetUsernames", GetUserNames);
             }
 
             public async Task Run()
@@ -78,6 +79,7 @@ namespace ConsoleApp
             {
                 Console.WriteLine("Usage: ");
                 Console.WriteLine(@"--Action=Login --Using={WebService|WebAPI} --Username={string} --Password={string");
+                Console.WriteLine(@"--Action=GetUserNames");
                 Console.WriteLine(@"--Action=Migrate --FromID={number}");
             }
 
@@ -126,6 +128,12 @@ namespace ConsoleApp
                 }
 
                 return await Task.FromResult<string>("1");
+            }
+
+            private async Task<string> GetUserNames()
+            {
+                var result = await loginService.GetUserNames();
+                return await Task.FromResult("Usernames");
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Linq;
 using UserServiceBase;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -25,7 +26,7 @@ namespace WebAPI.Controllers
             public string Password { get; set; }
         }
 
-
+        [Authorize]
         [HttpPost("Login")]
         public async Task<AuthResult> Login([FromBody]UserCredentials userCredentials)
         {
@@ -50,6 +51,7 @@ namespace WebAPI.Controllers
             return await authService.CreateUser(userDetails.Username, userDetails.Password, userDetails.SecondayPassword, userDetails.UserId);
         }
 
+        [Authorize]
         [HttpGet("GetUsers")]
         public async Task<UserDetails[]> Get()
         {
